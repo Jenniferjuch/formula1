@@ -6,7 +6,7 @@ from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.metrics import mean_absolute_error
 
 # Enable FastF1 caching
-fastf1.Cache.enable_cache("f1_cache")
+# fastf1.Cache.enable_cache("f1_cache")
 
 # Load FastF1 2024 Australian GP race session
 session_2024 = fastf1.get_session(2024, 3, "R")
@@ -36,6 +36,7 @@ qualifying_2025["DriverCode"] = qualifying_2025["Driver"].map(driver_mapping)
 
 # Merge 2025 Qualifying Data with 2024 Race Data
 merged_data = qualifying_2025.merge(laps_2024, left_on="DriverCode", right_on="Driver")
+print(merged_data)
 
 # Use only "QualifyingTime (s)" as a feature
 X = merged_data[["QualifyingTime (s)"]]
@@ -52,9 +53,12 @@ model.fit(X_train, y_train)
 # Predict using 2025 qualifying times
 predicted_lap_times = model.predict(qualifying_2025[["QualifyingTime (s)"]])
 qualifying_2025["PredictedRaceTime (s)"] = predicted_lap_times
+print(qualifying_2025)
 
 # Rank drivers by predicted race time
 qualifying_2025 = qualifying_2025.sort_values(by="PredictedRaceTime (s)")
+print(qualifying_2025)
+
 
 # Print final predictions
 print("\n🏁 Predicted 2025 Chinese GP Winner 🏁\n")
